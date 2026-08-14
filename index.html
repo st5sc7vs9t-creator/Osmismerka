@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#1D5C63">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Osmisměrky</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="orientation-lock">
+  <p>Prosím otočte tablet na šířku.</p>
+</div>
+
+<div id="app">
+
+  <!-- ÚVODNÍ OBRAZOVKA -->
+  <section id="screen-start" class="screen active">
+    <h1 class="title">Osmisměrky</h1>
+
+    <button id="btn-continue" class="btn btn-primary btn-huge" hidden>Pokračovat ve hře</button>
+
+    <div class="difficulty-row">
+      <button class="btn btn-difficulty" data-difficulty="lehka">Lehká</button>
+      <button class="btn btn-difficulty" data-difficulty="stredni">Střední</button>
+      <button class="btn btn-difficulty" data-difficulty="tezka">Těžká</button>
+    </div>
+
+    <button id="btn-stats" class="btn btn-secondary btn-large">Moje statistiky</button>
+  </section>
+
+  <!-- HERNÍ OBRAZOVKA -->
+  <section id="screen-game" class="screen">
+    <header class="game-header">
+      <button id="btn-menu" class="btn btn-header">Menu</button>
+      <div class="info-chip"><span class="info-label">Čas</span><span class="info-value" id="game-timer">00:00</span></div>
+      <div class="info-chip"><span class="info-label">Skóre</span><span class="info-value info-stars" id="game-stars">☆☆☆</span></div>
+      <button id="btn-hint" class="btn btn-header">Nápověda</button>
+      <button id="btn-new-game" class="btn btn-header btn-header-accent">Nová osmisměrka</button>
+    </header>
+
+    <div class="game-body">
+      <div id="grid-wrap">
+        <div id="grid"></div>
+      </div>
+      <div id="word-panel">
+        <h2 class="word-panel-title">Hledejte slova</h2>
+        <ul id="word-list"></ul>
+      </div>
+    </div>
+
+    <div id="win-overlay" hidden>
+      <div class="win-box">
+        <p class="win-text">Skvěle! Našla jste všechna slova!</p>
+        <button id="btn-next-puzzle" class="btn btn-primary btn-huge">Další osmisměrka</button>
+        <button id="btn-win-menu" class="btn btn-secondary btn-large">Zpět do menu</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- OBRAZOVKA STATISTIK -->
+  <section id="screen-stats" class="screen">
+    <h1 class="title">Moje statistiky</h1>
+
+    <div class="stats-summary">
+      <div class="stat-box">
+        <div class="stat-number" id="stat-total">0</div>
+        <div class="stat-label">Dokončených osmisměrek celkem</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number" id="stat-lehka">0</div>
+        <div class="stat-label">Lehká</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number" id="stat-stredni">0</div>
+        <div class="stat-label">Střední</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number" id="stat-tezka">0</div>
+        <div class="stat-label">Těžká</div>
+      </div>
+    </div>
+
+    <h2 class="stats-history-title">Posledních her</h2>
+    <ul id="stats-history"></ul>
+
+    <button id="btn-stats-back" class="btn btn-primary btn-large">Zpět na hru</button>
+  </section>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
