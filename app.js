@@ -443,7 +443,12 @@ function renderStats() {
     const dateStr = d.toLocaleDateString('cs-CZ') + ' ' + d.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' });
     const label = DIFFICULTY[s.difficulty] ? DIFFICULTY[s.difficulty].label : s.difficulty;
     const stars = typeof s.stars === 'number' ? s.stars : starsEarned(s.hints);
-    li.innerHTML = `<span>${dateStr} — ${label}</span><span>${starString(stars)} · Nápovědy: ${s.hints}</span>`;
+    const left = document.createElement('span');
+    left.textContent = `${dateStr} — ${label}`;
+    const right = document.createElement('span');
+    right.textContent = `${starString(stars)} · Nápovědy: ${s.hints}`;
+    li.appendChild(left);
+    li.appendChild(right);
     list.appendChild(li);
   });
   if (last10.length === 0) {
