@@ -1,5 +1,50 @@
 'use strict';
 
+/* ==================== OFFLINE PROVOZ ==================== */
+
+/* Registered here, before any game code runs, and deliberately not from inside
+   init(): this used to be the last statement of init(), so any earlier failure
+   -- a corrupt saved game, an unexpected DOM state -- skipped it silently. The
+   game still worked while online, and then the first launch without wifi hit
+   the browser's "no internet" page, because nothing had ever been cached. */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js', { scope: './' })
+    .catch(() => { /* offline-first: nothing useful to do if it fails */ });
+}
+
+/* Confirm the game really is stored on the tablet and say so on the start
+   screen, so it is visible when it is safe to close it or switch wifi off.
+   On its own load listener, so a failure in init() cannot take it down. */
+let ensureCacheAsked = false;
+
+function showOfflineReady() {
+  const el = document.getElementById('offline-ready');
+  if (el) el.hidden = false;
+}
+
+async function verifyOfflineReady() {
+  if (!('caches' in window) || !('serviceWorker' in navigator)) return;
+  const needed = ['./index.html', './style.css', './app.js'];
+  for (let attempt = 0; attempt < 40; attempt++) {
+    try {
+      const hits = await Promise.all(needed.map(u => caches.match(u, { ignoreSearch: true })));
+      if (hits.every(Boolean) && navigator.serviceWorker.controller) {
+        showOfflineReady();
+        return;
+      }
+      /* Registered, but the files are gone -- evicted under storage pressure,
+         or an install that never finished. Ask the worker to stock up again. */
+      if (!ensureCacheAsked && navigator.serviceWorker.controller) {
+        ensureCacheAsked = true;
+        navigator.serviceWorker.controller.postMessage('ensure-cache');
+      }
+    } catch (e) { return; }
+    await new Promise(r => setTimeout(r, 500));
+  }
+}
+
+window.addEventListener('load', verifyOfflineReady);
+
 /* ==================== BANKA SLOV ==================== */
 const WORD_BANK = {
   'Zvířata': ['PES','KOČKA','KŮŇ','KRÁVA','OVCE','KOZA','PRASE','SLEPICE','KACHNA','HUSA',
@@ -505,10 +550,6 @@ function init() {
   window.addEventListener('orientationchange', () => { if (puzzle) setTimeout(layoutGrid, 200); });
 
   updateContinueButton();
-
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
-  }
 }
 
 document.addEventListener('DOMContentLoaded', init);

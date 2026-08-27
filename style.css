@@ -371,3 +371,12 @@ html, body {
   #orientation-lock { display: flex; }
   #app { display: none; }
 }
+
+/* Shown once the service worker has the game stored, so it is clear when the
+   tablet can be taken offline. */
+.offline-ready {
+  margin-top: 2.4vh;
+  font-size: 2vh;
+  color: #5C7A66;
+  text-align: center;
+}
